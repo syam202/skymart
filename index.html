@@ -21,6 +21,11 @@
   .badge{font-size:.9rem;color:#555}
   .sky{display:flex;align-items:center;justify-content:flex-end;margin-top:2.5rem;font-size:.85rem;color:#666;}
   .sky img{width:84px;margin-left:.5rem}
+  .sky a{
+   color: var(--brand);
+   font-weight: 600;        /* bold-ish */
+   text-decoration: none;   /* remove underline if you like */
+  }
   .quiet{font-style:italic;color:#555}
 </style>
 </head>
@@ -30,24 +35,11 @@
   <div id="status" class="quiet"></div>
 
   <div id="cards"></div>
-
   <div class="sky">
-    Powered&nbsp;by
-    <a href="https://www.skymart.com.my" target="_blank" rel="noopener">
-      <!-- inline SVG asset -->
-      <svg viewBox="0 0 144 48" xmlns="http://www.w3.org/2000/svg" aria-labelledby="sktitle" role="img">
-        <title id="sktitle">SkyMart</title>
-        <g fill="none" fill-rule="evenodd">
-          <!-- storefront icon -->
-          <path fill="var(--brand)" d="M8 21h20v16H8zM4 18a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4v1H4v-1z"/>
-          <!-- text -->
-          <text x="36" y="34" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="700" fill="var(--brand)">
-            SkyMart
-          </text>
-        </g>
-      </svg>
-    </a>
+    Powered&nbsp;by&nbsp;
+    <a href="https://www.skymart.com.my" target="_blank" rel="noopener">SkyMart</a>
   </div>
+
 </div>
 
 <script>
