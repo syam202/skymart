@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Next Altris Shuttle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --brand: #0e3e6a;        /* deep navy */
+    --accent: #46c0c7;       /* teal line */
+    --bg: #f9fcff;
+    --card: #ffffff;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--brand);}
+  .wrapper{max-width:680px;margin:auto;padding:2rem 1rem;}
+  h1{font-size:clamp(1.6rem,4.5vw,2.2rem);margin:0 0 .25em}
+  h2{font-size:1.25rem;margin:.5em 0 .25em;color:var(--accent);letter-spacing:.5px;font-weight:600}
+  .card{background:var(--card);border-radius:12px;padding:1.25rem 1.5rem;box-shadow:0 4px 12px rgba(0,0,0,.05);margin-bottom:1.25rem}
+  .time{font-size:2rem;font-weight:600}
+  .badge{font-size:.9rem;color:#555}
+  .sky{display:flex;align-items:center;justify-content:flex-end;margin-top:2.5rem;font-size:.85rem;color:#666;}
+  .sky img{width:84px;margin-left:.5rem}
+  .quiet{font-style:italic;color:#555}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <h1>Altris Residence — Next Shuttle</h1>
+  <div id="status" class="quiet"></div>
+
+  <div id="cards"></div>
+
+  <div class="sky">
+    Powered by &nbsp;
+    <img src="https://raw.githubusercontent.com/hisyamxyz/skymart-assets/main/logo-tile-white.svg" alt="SkyMart">
+  </div>
+</div>
+
+<script>
+/* ---------- CONFIG ------------------------------------------------------- */
+const outbound = [  // Altris ➜ LRT Sri Rampai
+  "07:00","07:30","08:00","08:30","09:00","09:30",
+  "12:00","12:30","15:00","17:00","17:30","18:00","18:30"
+];
+const inbound = [   // LRT Sri Rampai ➜ Altris
+  "08:15","08:45","09:15","09:45","12:15","12:45",
+  "15:15","17:15","17:45","18:15","18:45","19:15","19:45"
+];
+const daysActive = [1,2,3,4,5];            // 0 = Sunday … 6 = Saturday
+/* ------------------------------------------------------------------------ */
+
+const cardsEl = document.getElementById("cards");
+const statusEl = document.getElementById("status");
+
+function parseToday(timeHHMM){
+  const [hh,mm] = timeHHMM.split(":").map(Number);
+  const d = new Date();
+  d.setHours(hh,mm,0,0);
+  return d;
+}
+function minutesDiff(a,b){ return Math.round((b - a)/60000); }
+
+function nextTrip(schedule){
+  const now = new Date();
+  for(const t of schedule){
+    const when = parseToday(t);
+    if(when > now) return {time:t, date:when};
+  }
+  // none left today -> tomorrow at first run
+  const tomorrow = parseToday(schedule[0]);
+  tomorrow.setDate(tomorrow.getDate()+1);
+  return {time:schedule[0]+" (tomorrow)", date:tomorrow};
+}
+
+function refresh(){
+  const now = new Date();
+
+  // Week-day guard
+  if(!daysActive.includes(now.getDay())){
+    statusEl.textContent = "The shuttle runs Monday–Friday only. Enjoy your weekend!";
+    cardsEl.innerHTML = "";
+    return;
+  } else {
+    statusEl.textContent = "";
+  }
+
+  cardsEl.innerHTML = "";   // clear
+
+  [
+    {title:"Altris → LRT Sri Rampai", schedule:outbound},
+    {title:"LRT Sri Rampai → Altris", schedule:inbound}
+  ].forEach(({title,schedule})=>{
+    const {time,date} = nextTrip(schedule);
+    const mins = minutesDiff(now,date);
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h2>${title}</h2>
+      <div class="time">${time}</div>
+      <div class="badge">${mins===0 ? "Now" : mins+" min&nbsp;away"}</div>
+    `;
+    cardsEl.appendChild(card);
+  });
+}
+
+refresh();
+setInterval(refresh, 60000);   // update every minute
+</script>
+</body>
+</html>
