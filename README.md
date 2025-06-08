@@ -25,3 +25,6 @@ A zero-dependency, single-file web page that tells residents **when the next fre
 git clone https://github.com/<you>/altris-shuttle.git
 cd altris-shuttle
 open index.html        # or just double-click in Finder/Explorer
+```
+
+The schedule expands to show all remaining trips for the day when you tap on each card.
