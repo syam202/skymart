@@ -19,6 +19,9 @@
   .card{background:var(--card);border-radius:12px;padding:1.25rem 1.5rem;box-shadow:0 4px 12px rgba(0,0,0,.05);margin-bottom:1.25rem}
   .time{font-size:2rem;font-weight:600}
   .badge{font-size:.9rem;color:#555}
+  details.schedule{margin-top:.75rem;font-size:.9rem}
+  details.schedule summary{cursor:pointer;color:var(--brand);font-weight:600}
+  details.schedule ul{margin:.5rem 0 0;padding-left:1.25rem}
   .sky{display:flex;align-items:center;justify-content:flex-end;margin-top:2.5rem;font-size:.85rem;color:#666;}
   .sky img{width:84px;margin-left:.5rem}
   .sky a{
@@ -78,6 +81,11 @@ function nextTrip(schedule){
   return {time:schedule[0]+" (tomorrow)", date:tomorrow};
 }
 
+function remainingTrips(schedule){
+  const now = new Date();
+  return schedule.filter(t => parseToday(t) > now);
+}
+
 function refresh(){
   const now = new Date();
 
@@ -98,6 +106,10 @@ function refresh(){
   ].forEach(({title,schedule})=>{
     const {time,date} = nextTrip(schedule);
     const mins = minutesDiff(now,date);
+    const remaining = remainingTrips(schedule);
+    const listItems = remaining.length
+      ? remaining.map(t => `<li>${t}</li>`).join("")
+      : '<li>No more trips today</li>';
 
     const card = document.createElement("div");
     card.className = "card";
@@ -105,6 +117,10 @@ function refresh(){
       <h2>${title}</h2>
       <div class="time">${time}</div>
       <div class="badge">${mins===0 ? "Now" : mins+" min&nbsp;away"}</div>
+      <details class="schedule">
+        <summary>Today's remaining trips</summary>
+        <ul>${listItems}</ul>
+      </details>
     `;
     cardsEl.appendChild(card);
   });

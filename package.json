@@ -1,0 +1,9 @@
+{
+  "name": "altris-shuttle",
+  "version": "1.0.0",
+  "description": "Next shuttle schedule viewer for Altris Residence",
+  "scripts": {
+    "test": "echo \"No tests specified\""
+  },
+  "license": "MIT"
+}
