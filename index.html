@@ -69,6 +69,16 @@ function parseToday(timeHHMM){
 }
 function minutesDiff(a,b){ return Math.round((b - a)/60000); }
 
+function formatMinutes(mins){
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  const parts = [];
+  if(h) parts.push(h + " h");
+  if(m) parts.push(m + " min");
+  if(!h && !m) parts.push("0 min");
+  return parts.join(" ");
+}
+
 function nextTrip(schedule){
   const now = new Date();
   for(const t of schedule){
@@ -116,7 +126,7 @@ function refresh(){
     card.innerHTML = `
       <h2>${title}</h2>
       <div class="time">${time}</div>
-      <div class="badge">${mins===0 ? "Now" : mins+" min&nbsp;away"}</div>
+      <div class="badge">${mins===0 ? "Now" : formatMinutes(mins)+"&nbsp;away"}</div>
       <details class="schedule">
         <summary>Today's remaining trips</summary>
         <ul>${listItems}</ul>
