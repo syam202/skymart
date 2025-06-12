@@ -12,6 +12,12 @@
     --card: #ffffff;
     font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   }
+  body[data-theme="dark"] {
+    --brand: #c7d1dd;
+    --accent: #46c0c7;
+    --bg: #121212;
+    --card: #1e1e1e;
+  }
   html,body{margin:0;padding:0;background:var(--bg);color:var(--brand);}
   .wrapper{max-width:680px;margin:auto;padding:2rem 1rem;}
   h1{font-size:clamp(1.6rem,4.5vw,2.2rem);margin:0 0 .25em}
@@ -19,10 +25,12 @@
   .card{background:var(--card);border-radius:12px;padding:1.25rem 1.5rem;box-shadow:0 4px 12px rgba(0,0,0,.05);margin-bottom:1.25rem}
   .time{font-size:2rem;font-weight:600}
   .badge{font-size:.9rem;color:#555}
+  body[data-theme="dark"] .badge{color:#bbb}
   details.schedule{margin-top:.75rem;font-size:.9rem}
   details.schedule summary{cursor:pointer;color:var(--brand);font-weight:600}
   details.schedule ul{margin:.5rem 0 0;padding-left:1.25rem}
   .sky{display:flex;align-items:center;justify-content:flex-end;margin-top:2.5rem;font-size:.85rem;color:#666;}
+  body[data-theme="dark"] .sky{color:#aaa}
   .sky img{width:84px;margin-left:.5rem}
   .sky a{
    color: var(--brand);
@@ -30,10 +38,13 @@
    text-decoration: none;   /* remove underline if you like */
   }
   .quiet{font-style:italic;color:#555}
+  body[data-theme="dark"] .quiet{color:#bbb}
+  #theme-toggle{float:right;margin-top:-.25rem}
 </style>
 </head>
 <body>
 <div class="wrapper">
+  <button id="theme-toggle">Toggle Dark Mode</button>
   <h1>Altris Residence — Next Shuttle</h1>
   <div id="status" class="quiet"></div>
 
@@ -60,6 +71,21 @@ const daysActive = [1,2,3,4,5];            // 0 = Sunday … 6 = Saturday
 
 const cardsEl = document.getElementById("cards");
 const statusEl = document.getElementById("status");
+const toggleBtn = document.getElementById("theme-toggle");
+
+// Persisted theme
+if(localStorage.getItem("theme") === "dark"){
+  document.body.setAttribute("data-theme","dark");
+}
+toggleBtn.addEventListener("click", () => {
+  if(document.body.getAttribute("data-theme") === "dark"){
+    document.body.removeAttribute("data-theme");
+    localStorage.removeItem("theme");
+  } else {
+    document.body.setAttribute("data-theme","dark");
+    localStorage.setItem("theme","dark");
+  }
+});
 
 function parseToday(timeHHMM){
   const [hh,mm] = timeHHMM.split(":").map(Number);

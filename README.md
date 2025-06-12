@@ -15,6 +15,7 @@ A zero-dependency, single-file web page that tells residents **when the next fre
 | **Weekend guard** | Displays a friendly note on Saturdays & Sundays. |
 | **Easily editable** | Update the time arrays at the top of the script to change the timetable. |
 | **Responsive** | Works great on mobile lobby displays, tablets and desktops. |
+| **Dark mode** | Toggle the new switch to view the schedule in darker colors. |
 | **Powered by SkyMart** | Footer link credits the sponsor. |
 
 ---
