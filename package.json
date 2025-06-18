@@ -1,9 +1,0 @@
-{
-  "name": "altris-shuttle",
-  "version": "1.0.0",
-  "description": "Next shuttle schedule viewer for Altris Residence",
-  "scripts": {
-    "test": "node test/format.test.js"
-  },
-  "license": "MIT"
-}

@@ -1,0 +1,9 @@
+# Ignore Gradle wrapper JAR
+gradle/wrapper/gradle-wrapper.jar
+
+# Maven local repository
+.mvn
+
+# Build output
+build/
+
