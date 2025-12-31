@@ -122,6 +122,7 @@
    text-decoration: none;
   }
   .quiet{font-style:italic;color:rgba(232,236,255,0.78);}
+  .no-trips-note{margin-top:.75rem;}
 
   .confetti {
     position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:20px;
@@ -295,16 +296,22 @@ function refresh(){
       ? remaining.map(t => `<li>${t}</li>`).join("")
       : '<li>No more trips today</li>';
 
+    const scheduleMarkup = remaining.length
+      ? `
+        <details class="schedule">
+          <summary>Today's remaining trips</summary>
+          <ul>${listItems}</ul>
+        </details>
+      `
+      : `<p class="quiet no-trips-note">No more trips today.</p>`;
+
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
       <h2>${title}</h2>
       <div class="time">${time}</div>
       <div class="badge">${mins===0 ? "Now" : formatMinutes(mins)+"&nbsp;away"}</div>
-      <details class="schedule">
-        <summary>Today's remaining trips</summary>
-        <ul>${listItems}</ul>
-      </details>
+      ${scheduleMarkup}
     `;
     cardsEl.appendChild(card);
   });
