@@ -216,6 +216,13 @@ function isHoliday(date){ return publicHolidays.includes(date.toLocaleDateString
 function isServiceDay(date){
   return daysActive.includes(date.getDay()) && !isHoliday(date);
 }
+function dayDiff(from, to){
+  const a = new Date(from);
+  const b = new Date(to);
+  a.setHours(0,0,0,0);
+  b.setHours(0,0,0,0);
+  return Math.round((a - b)/86400000);
+}
 function parseOn(dateObj, timeHHMM){
   const [hh,mm] = timeHHMM.split(":").map(Number);
   const d = new Date(dateObj);
@@ -230,6 +237,12 @@ function nextServiceDay(fromDate){
   } while(!isServiceDay(d));
   return d;
 }
+function labelTimeForDay(timeHHMM, serviceDate, referenceDate){
+  const diff = dayDiff(serviceDate, referenceDate);
+  if(diff === 0) return timeHHMM;
+  if(diff === 1) return `${timeHHMM} (tomorrow)`;
+  return `${timeHHMM} (${serviceDate.toLocaleDateString("en-CA")})`;
+}
 
 function formatMinutes(mins){
   const h = Math.floor(mins / 60);
@@ -243,44 +256,60 @@ function formatMinutes(mins){
 
 function nextTrip(schedule){
   const now = new Date();
-  const today = new Date(now);
+  const serviceDate = new Date(refresh.serviceDate || now);
   for(const t of schedule){
-    const when = parseOn(today, t);
-    if(when > now) return {time:t, date:when};
+    const when = parseOn(serviceDate, t);
+    if(when > now) return {time:labelTimeForDay(t, serviceDate, now), date:when};
   }
-  // none left today -> find next service day (skipping weekends/holidays)
-  const nextDay = nextServiceDay(now);
+  // none left on the service date -> find the next service day (skipping weekends/holidays)
+  const nextDay = nextServiceDay(serviceDate);
   const nextTime = parseOn(nextDay, schedule[0]);
-  const dayDiff = Math.round((new Date(nextDay).setHours(0,0,0,0) - new Date(today).setHours(0,0,0,0)) / 86400000);
-  const label = dayDiff === 1 ? `${schedule[0]} (tomorrow)` : `${schedule[0]} (${nextTime.toLocaleDateString("en-CA")})`;
-  return {time:label, date:nextTime};
+  return {time:labelTimeForDay(schedule[0], nextDay, now), date:nextTime};
 }
 
 function remainingTrips(schedule){
   const now = new Date();
-  return schedule.filter(t => parseToday(t) > now);
+  const serviceDate = new Date(refresh.serviceDate || now);
+  return schedule
+    .filter(t => parseOn(serviceDate, t) > now)
+    .map(t => labelTimeForDay(t, serviceDate, now));
 }
 
 function refresh(){
   const now = new Date();
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate()+1);
+  refresh.serviceDate = now;
 
   // Kuala Lumpur public holiday guard
   if(isHoliday(now)){
-    statusEl.textContent = "No shuttle on Kuala Lumpur public holidays.";
-    cardsEl.innerHTML = "";
-    return;
+    if(isServiceDay(tomorrow)){
+      refresh.serviceDate = tomorrow;
+      statusEl.textContent = "Today is a public holiday. Showing tomorrow's shuttle times.";
+    } else {
+      statusEl.textContent = "No shuttle on Kuala Lumpur public holidays.";
+      cardsEl.innerHTML = "";
+      return;
+    }
   }
 
   // Week-day guard
-  if(!daysActive.includes(now.getDay())){
+  if(!daysActive.includes(now.getDay()) && !isHoliday(now)){
     statusEl.textContent = "The shuttle runs Monday–Friday only. Enjoy your weekend!";
     cardsEl.innerHTML = "";
     return;
   } else {
-    statusEl.textContent = "";
+    if(!statusEl.textContent) statusEl.textContent = "";
   }
 
   cardsEl.innerHTML = "";   // clear
+  const serviceDate = new Date(refresh.serviceDate || now);
+  const scheduleHeading = (() => {
+    const diff = dayDiff(serviceDate, now);
+    if(diff === 0) return "Today's remaining trips";
+    if(diff === 1) return "Tomorrow's trips";
+    return `${serviceDate.toLocaleDateString("en-CA")} trips`;
+  })();
 
   [
     {title:"Altris → LRT Sri Rampai", schedule:outbound},
@@ -296,11 +325,11 @@ function refresh(){
     const scheduleMarkup = remaining.length
       ? `
         <details class="schedule">
-          <summary>Today's remaining trips</summary>
+          <summary>${scheduleHeading}</summary>
           <ul>${listItems}</ul>
         </details>
       `
-      : `<p class="quiet no-trips-note">No more trips today.</p>`;
+      : `<p class="quiet no-trips-note">No more trips on this service day.</p>`;
 
     const card = document.createElement("div");
     card.className = "card";
