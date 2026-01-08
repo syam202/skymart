@@ -4,6 +4,23 @@
 <meta charset="utf-8">
 <title>Next Altris Shuttle</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['"Space Grotesk"', "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif"]
+        },
+        colors: {
+          brand: "#0f122b",
+          accent: "#ffcb45",
+          "accent-2": "#ff6ea1"
+        }
+      }
+    }
+  };
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
 
@@ -15,7 +32,6 @@
     --card: rgba(255,255,255,0.08);
     --stroke: rgba(255,255,255,0.08);
     --text: #e8ecff;
-    font-family: 'Space Grotesk', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   }
 
   html,body{
@@ -27,7 +43,7 @@
     min-height:100vh;
   }
 
-  .wrapper{max-width:760px;margin:auto;padding:2.75rem 1.5rem 3.5rem;position:relative;overflow:hidden;}
+  .wrapper{position:relative;overflow:hidden;}
   .wrapper::before,.wrapper::after{
     content:"";position:absolute;inset:-120px auto auto -120px;width:260px;height:260px;border-radius:50%;
     background:radial-gradient(circle, rgba(255,203,69,0.3) 0%, rgba(255,203,69,0) 70%);
@@ -35,54 +51,6 @@
   }
   .wrapper::after{inset:auto -140px -140px auto;background:radial-gradient(circle, rgba(255,110,161,0.25) 0%, rgba(255,110,161,0) 70%);}
 
-  h1{font-size:clamp(1.8rem,4.5vw,2.6rem);margin:.25em 0 .15em;letter-spacing:-0.01em;}
-  h2{font-size:1.15rem;margin:.5em 0 .25em;color:var(--accent);letter-spacing:.6px;font-weight:700;text-transform:uppercase;}
-
-  .hero{
-    position:relative;
-    padding:1.2rem 1.25rem 1.35rem;
-    background:linear-gradient(135deg, rgba(255,203,69,0.08), rgba(255,110,161,0.08));
-    border:1px solid var(--stroke);
-    border-radius:18px;
-    backdrop-filter:blur(10px);
-    box-shadow:0 16px 40px rgba(0,0,0,0.35);
-  }
-  .hero__eyebrow{
-    display:inline-flex;
-    align-items:center;
-    gap:.4rem;
-    padding:.35rem .7rem;
-    border-radius:999px;
-    background:rgba(255,255,255,0.08);
-    font-weight:700;
-    color:var(--accent);
-    letter-spacing:.04em;
-    text-transform:uppercase;
-    font-size:.85rem;
-  }
-  .hero__eyebrow::before{content:"✨";}
-
-  #status{
-    margin:1rem 0 0;
-    padding:.85rem 1rem;
-    border-radius:12px;
-    background:rgba(255,255,255,0.05);
-    border:1px solid var(--stroke);
-    color:rgba(232,236,255,0.9);
-  }
-
-  #cards{margin-top:1.4rem;}
-  .card{
-    background:var(--card);
-    border-radius:16px;
-    padding:1.4rem 1.6rem;
-    box-shadow:0 16px 48px rgba(0,0,0,0.35);
-    border:1px solid var(--stroke);
-    position:relative;
-    overflow:hidden;
-    backdrop-filter:blur(8px);
-    margin-bottom:1.4rem;
-  }
   .card::after{
     content:"";
     position:absolute;inset:0;
@@ -91,36 +59,6 @@
     pointer-events:none;
     opacity:.9;
   }
-  .time{font-size:2.35rem;font-weight:700;letter-spacing:.01em;}
-  .badge{
-    display:inline-flex;
-    align-items:center;
-    gap:.45rem;
-    margin-top:.1rem;
-    padding:.45rem .8rem;
-    border-radius:999px;
-    background:rgba(255,203,69,0.12);
-    border:1px solid rgba(255,203,69,0.4);
-    color:#ffe9b1;
-    font-weight:600;
-    font-size:.95rem;
-  }
-  .badge::before{content:"\25CF";font-size:.75rem;color:var(--accent);}
-
-  details.schedule{margin-top:.8rem;font-size:.95rem;position:relative;z-index:1;color:rgba(232,236,255,0.92);}
-  details.schedule summary{cursor:pointer;color:var(--text);font-weight:700;}
-  details.schedule ul{margin:.6rem 0 0;padding-left:1.1rem;line-height:1.55;}
-  details.schedule li{margin:.08rem 0;}
-
-  .sky{display:flex;align-items:center;justify-content:flex-end;margin-top:2.5rem;font-size:.9rem;color:rgba(232,236,255,0.7);gap:.5rem;}
-  .sky img{width:84px;margin-left:.5rem}
-  .sky a{
-   color: var(--accent);
-   font-weight: 700;
-   text-decoration: none;
-  }
-  .quiet{font-style:italic;color:rgba(232,236,255,0.78);}
-  .no-trips-note{margin-top:.75rem;}
 
   .confetti {
     position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:20px;
@@ -140,28 +78,25 @@
     10%{opacity:.9;}
     100%{transform:translate3d(0,520px,0) rotate(220deg);opacity:0;}
   }
-
-  @media (max-width:540px){
-    .card{padding:1.2rem 1.25rem;}
-    .time{font-size:2rem;}
-    .hero{padding:1rem 1.05rem;}
-  }
 </style>
 </head>
-<body>
-<div class="wrapper">
-  <div class="hero">
+<body class="font-sans text-[var(--text)]">
+<div class="wrapper mx-auto max-w-[760px] px-6 pb-14 pt-11 max-[540px]:px-4">
+  <div class="hero relative overflow-hidden rounded-[18px] border border-[var(--stroke)] bg-[linear-gradient(135deg,rgba(255,203,69,0.08),rgba(255,110,161,0.08))] p-5 shadow-[0_16px_40px_rgba(0,0,0,0.35)] backdrop-blur max-[540px]:p-4">
     <div class="confetti" aria-hidden="true"></div>
-    <div class="hero__eyebrow">New Year 2026</div>
-    <h1>Altris Residence — Next Shuttle</h1>
+    <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[0.85rem] font-bold uppercase tracking-[0.04em] text-[var(--accent)]">
+      <span aria-hidden="true">✨</span>
+      <span>New Year 2026</span>
+    </div>
+    <h1 class="mt-2 text-[clamp(1.8rem,4.5vw,2.6rem)] font-semibold tracking-[-0.01em]">Altris Residence — Next Shuttle</h1>
   </div>
 
-  <div id="status" class="quiet"></div>
+  <div id="status" class="mt-4 rounded-xl border border-[var(--stroke)] bg-white/5 px-4 py-3 text-[0.95rem] text-[rgba(232,236,255,0.9)]"></div>
 
-  <div id="cards"></div>
-  <div class="sky">
+  <div id="cards" class="mt-6 space-y-6"></div>
+  <div class="sky mt-10 flex items-center justify-end gap-2 text-sm text-[rgba(232,236,255,0.7)]">
     Powered&nbsp;by&nbsp;
-    <a href="https://www.skymart.com.my" target="_blank" rel="noopener">SkyMart</a>
+    <a class="font-bold text-[var(--accent)] no-underline" href="https://www.skymart.com.my" target="_blank" rel="noopener">SkyMart</a>
   </div>
 
 </div>
@@ -319,24 +254,27 @@ function refresh(){
     const mins = minutesDiff(now,date);
     const remaining = remainingTrips(schedule);
     const listItems = remaining.length
-      ? remaining.map(t => `<li>${t}</li>`).join("")
-      : '<li>No more trips today</li>';
+      ? remaining.map(t => `<li class="my-1">${t}</li>`).join("")
+      : '<li class="my-1">No more trips today</li>';
 
     const scheduleMarkup = remaining.length
       ? `
-        <details class="schedule">
-          <summary>${scheduleHeading}</summary>
-          <ul>${listItems}</ul>
+        <details class="schedule mt-3 text-[0.95rem] text-[rgba(232,236,255,0.92)]">
+          <summary class="cursor-pointer font-bold text-[var(--text)]">${scheduleHeading}</summary>
+          <ul class="mt-2 list-disc pl-5 leading-relaxed">${listItems}</ul>
         </details>
       `
-      : `<p class="quiet no-trips-note">No more trips on this service day.</p>`;
+      : `<p class="no-trips-note mt-3 italic text-[rgba(232,236,255,0.78)]">No more trips on this service day.</p>`;
 
     const card = document.createElement("div");
-    card.className = "card";
+    card.className = "card relative overflow-hidden rounded-2xl border border-[var(--stroke)] bg-[var(--card)] p-6 shadow-[0_16px_48px_rgba(0,0,0,0.35)] backdrop-blur max-[540px]:p-5";
     card.innerHTML = `
-      <h2>${title}</h2>
-      <div class="time">${time}</div>
-      <div class="badge">${mins===0 ? "Now" : formatMinutes(mins)+"&nbsp;away"}</div>
+      <h2 class="text-[1.15rem] font-bold uppercase tracking-[0.6px] text-[var(--accent)]">${title}</h2>
+      <div class="time mt-1 text-[2.35rem] font-bold tracking-[0.01em] max-[540px]:text-[2rem]">${time}</div>
+      <div class="badge mt-1 inline-flex items-center gap-2 rounded-full border border-[rgba(255,203,69,0.4)] bg-[rgba(255,203,69,0.12)] px-3 py-2 text-[0.95rem] font-semibold text-[#ffe9b1]">
+        <span class="text-[0.75rem] text-[var(--accent)]">●</span>
+        ${mins===0 ? "Now" : formatMinutes(mins)+"&nbsp;away"}
+      </div>
       ${scheduleMarkup}
     `;
     cardsEl.appendChild(card);
